@@ -11,7 +11,7 @@ PauseMenu::PauseMenu(sf::RenderWindow *window, const sf::Font &font)
 }
 
 void PauseMenu::checkPause() {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) or sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         GamePaused = true;
         pauseScreen();
     }
@@ -23,7 +23,8 @@ void PauseMenu::pauseScreen() {
             case 0:
                 GamePaused = false;
                 break;
-                case 1:InGameplay = false;
+            case 1:
+                InGameplay = false;
                 GamePaused = false;
                 break;
         }

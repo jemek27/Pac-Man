@@ -94,7 +94,7 @@ void MainMenu::nicknameInput(const std::regex& nicknameRegex, sf::Text& prompt) 
                 prompt.setFillColor(sf::Color::Red);
                 prompt.setPosition((WindowSize.x - prompt.getGlobalBounds().width) / 2, 150);
             }
-        } else  if (Nickname.size() <= 32)  {
+        } else  if (Nickname.size() < 32)  {
             Nickname += static_cast<char>(Event.text.unicode);
             if (!std::regex_match(Nickname, nicknameRegex)) {
                 Nickname.pop_back(); // Remove last character if invalid

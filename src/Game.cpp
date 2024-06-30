@@ -109,59 +109,60 @@ void Game::initiateGamePlay() {
 void Game::update() {
     pullEvent();
     checkUpgradeTime();
-    ThePauseMenu->checkPause();
-    if (!ThePauseMenu->InGameplay) {
-        TheMainMenu->InGameplay = ThePauseMenu->InGameplay;
-    }
+    if (!ThePauseMenu->GamePaused) {
+        ThePauseMenu->checkPause();
 
-    if (ThePauseMenu->GamePaused) {
-        ThePauseMenu->pauseScreen();
-    } else {
-        PacMan->tryMove(Map, TileSize);
-
-        std::thread thStationaryObjsCollision(&Game::checkStationaryObjsCollision, this);
-
-        std::vector<std::future<void>> futures;
-        for (const auto& ghost : Ghosts) {
-            futures.push_back(std::async(std::launch::async, &Ghost::checkAndMove, ghost));
+        if (!ThePauseMenu->InGameplay) {
+            TheMainMenu->InGameplay = ThePauseMenu->InGameplay;
         }
 
-        for (auto& f : futures) { f.wait(); }
-        thStationaryObjsCollision.join();
-        checkFruitAppearance();
+        if (!ThePauseMenu->GamePaused) {
+            PacMan->tryMove(Map, TileSize);
 
-        for (const auto& ghost : Ghosts) {
-            if (checkCollision(PacMan->Sprite.getPosition(), TileSize, ghost->Sprite.getPosition(), TileSize) and
-                !ghost->Eaten) {
+            std::thread thStationaryObjsCollision(&Game::checkStationaryObjsCollision, this);
 
-                if (UpgradeOn and !ghost->EatenAtCurrUpgrade) {
-                    auto tempUsunpotem = Score;
-                    Score += 100 << ++EatenCount;
-                    std::cout << Score - tempUsunpotem << std::endl;
-                    ghost->EatenAtCurrUpgrade = true;
-                    std::cout << "colision with ghost" << std::endl;
-                    ghost->wasEaten();
-                } else {
-                    render();
-                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                    if (--Lifes == 0) { gameplayHasEnded(); }
-                    else {
-                        setStartPos();
-                        upgradeOff();
+            std::vector<std::future<void>> futures;
+            for (const auto& ghost : Ghosts) {
+                futures.push_back(std::async(std::launch::async, &Ghost::checkAndMove, ghost));
+            }
+
+            for (auto& f : futures) { f.wait(); }
+            thStationaryObjsCollision.join();
+            checkFruitAppearance();
+
+            for (const auto& ghost : Ghosts) {
+                if (checkCollision(PacMan->Sprite.getPosition(), TileSize, ghost->Sprite.getPosition(), TileSize) and
+                    !ghost->Eaten) {
+
+                    if (UpgradeOn and !ghost->EatenAtCurrUpgrade) {
+                        auto tempUsunpotem = Score;
+                        Score += 100 << ++EatenCount;
+                        std::cout << Score - tempUsunpotem << std::endl;
+                        ghost->EatenAtCurrUpgrade = true;
+                        std::cout << "colision with ghost" << std::endl;
+                        ghost->wasEaten();
+                    } else {
+                        render();
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                        if (--Lifes == 0) { gameplayHasEnded(); }
+                        else {
+                            setStartPos();
+                            upgradeOff();
+                        }
                     }
                 }
             }
-        }
 
-        ScoreDisplay->text.setString("1UP\n" + std::to_string(Score));
-        LifesDisplay->text.setString("LIFE'S: " + std::to_string(Lifes));
+            ScoreDisplay->text.setString("1UP\n" + std::to_string(Score));
+            LifesDisplay->text.setString("LIFE'S: " + std::to_string(Lifes));
 
-        if (StationaryObjs.empty()) {
-            gameplayHasEnded();
+            if (StationaryObjs.empty()) {
+                gameplayHasEnded();
+            }
         }
+    } else {
+        ThePauseMenu->pauseScreen();
     }
-
-    pullEvent();
 }
 
 void Game::render() {
