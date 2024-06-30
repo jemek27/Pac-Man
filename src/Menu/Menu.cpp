@@ -60,14 +60,14 @@ int Menu::getSelectedItemIndex() const {
 bool Menu::ItemSelected() {
     bool result = false;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) or sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
         moveUp();
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) or sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
         moveDown();
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
         result = true;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(75));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     return result;
 }
 

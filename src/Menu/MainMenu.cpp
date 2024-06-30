@@ -18,9 +18,9 @@ MainMenu::~MainMenu() {
 
 void MainMenu::interact() {
     if(ItemSelected()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(75));
         switch(getSelectedItemIndex()) {
             case 0:
-
                 if (!NickNameIsValid) {
                     initiateNickINputScrean();
                 }
@@ -100,6 +100,10 @@ void MainMenu::nicknameInput(const std::regex& nicknameRegex, sf::Text& prompt) 
                 Nickname.pop_back(); // Remove last character if invalid
                 prompt.setString("Invalid nickname, use: letters, numbers or this \"_\" character");
                 prompt.setFillColor(sf::Color::Red);
+                prompt.setPosition((WindowSize.x - prompt.getGlobalBounds().width) / 2, 150);
+            } else {
+                prompt.setString("Nickname:");
+                prompt.setFillColor(sf::Color::White);
                 prompt.setPosition((WindowSize.x - prompt.getGlobalBounds().width) / 2, 150);
             }
         } else {
