@@ -4,7 +4,8 @@
 
 #include "Menu/Menu.h"
 
-Menu::Menu(const sf::Font& font) : selectedItemIndex(0), Font(font) {}
+Menu::Menu(const sf::Font& font) :  selectedItemIndex(0), Font(font),
+                                    LastKeyPressTime(std::chrono::steady_clock::now()) {}
 
 void Menu::addButton(const std::string& label) {
     sf::Text text;
@@ -60,14 +61,19 @@ int Menu::getSelectedItemIndex() const {
 bool Menu::ItemSelected() {
     bool result = false;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) or sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        moveUp();
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) or sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        moveDown();
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-        result = true;
+    auto now = std::chrono::steady_clock::now();
+    if (now - LastKeyPressTime >= DebounceTime) { // do if debounce time has passed
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) or sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            moveUp();
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) or sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            moveDown();
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+            result = true;
+        }
+        LastKeyPressTime = now;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+
     return result;
 }
 

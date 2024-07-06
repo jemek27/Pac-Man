@@ -4,8 +4,9 @@
 
 #include "Menu/MainMenu.h"
 
-MainMenu::MainMenu(sf::RenderWindow* window, const sf::Font& font) : Menu(font), Window(window), WindowSize(Window->getSize()),
-                                                                     FileManager(new FileInputOutputManager), InGameplay(false), NickNameIsValid(false){
+MainMenu::MainMenu(sf::RenderWindow* window, const sf::Font& font)
+                    : Menu(font), Window(window), WindowSize(Window->getSize()), FileManager(new FileInputOutputManager),
+                    InGameplay(false), NickNameIsValid(false) {
     addButton("Start Game");
     addButton("Scoreboard");
     addButton("Exit");
@@ -18,7 +19,6 @@ MainMenu::~MainMenu() {
 
 void MainMenu::interact() {
     if(ItemSelected()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(75));
         switch(getSelectedItemIndex()) {
             case 0:
                 if (!NickNameIsValid) {

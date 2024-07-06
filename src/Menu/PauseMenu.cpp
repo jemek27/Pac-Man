@@ -26,6 +26,7 @@ void PauseMenu::pauseScreen() {
             case 1:
                 InGameplay = false;
                 GamePaused = false;
+                sf::sleep(sf::milliseconds(100));
                 break;
         }
     }

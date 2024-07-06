@@ -101,6 +101,7 @@ public:
     void checkUpgradeTime();
     void upgradeOff();
     void checkFruitAppearance();
+    void ghostInteractions();
 };
 
 

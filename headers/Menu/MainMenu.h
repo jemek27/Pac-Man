@@ -19,7 +19,6 @@ class MainMenu : public Menu {
     std::string Nickname;
     bool NickNameIsValid;
     bool InGameplay;
-
     friend class Game;
 public:
     MainMenu(sf::RenderWindow* window, const sf::Font& font);

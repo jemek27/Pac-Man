@@ -18,6 +18,9 @@ protected:
     std::vector<sf::Text> Text;
     sf::Font Font;
     int selectedItemIndex;
+
+    std::chrono::steady_clock::time_point LastKeyPressTime;
+    std::chrono::milliseconds DebounceTime{100};
 public:
     Menu(const sf::Font& font);
     virtual ~Menu() = default;

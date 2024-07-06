@@ -12,7 +12,6 @@ int main()
 
     Game* game = new Game(windowHeight, windowWidth, fps, "Pac-Man");
 
-
     while (game->running()) {
         game->drawMainMenu();
         game->actInMainMenu();
@@ -24,6 +23,7 @@ int main()
             }
         }
     }
+
     std::cout << "END";
     return 0;
 }
