@@ -68,7 +68,7 @@ Game::~Game() {
 
 void Game::initiateGamePlay() {
     if (!Map.empty()) { deleteMap(); }
-    if (!StationaryObjsM.empty()) { deleteStationaryObjs(); }
+    if (!StationaryObjs.empty()) { deleteStationaryObjs(); }
     if (PacMan != nullptr) {
         PacMan->setPosTileIDs({12, 19}, {-1, -1});
         PacMan->setResetParams();
@@ -106,7 +106,7 @@ void Game::initiateGamePlay() {
     }
 
     FruitNotYetAppeared = true;
-    StartNumOfPoints = StationaryObjsM.size();
+    StartNumOfPoints = StationaryObjs.size();
 }
 
 void Game::update() {
@@ -132,7 +132,7 @@ void Game::update() {
             for (const auto& ghost : Ghosts) {
                 ghost->checkAndMove();
             }
-            checkStationaryObjsCollision_v2();
+            checkStationaryObjsCollision();
 
             //for (auto& f : futures) { f.wait(); }
             //thStationaryObjsCollision.join();
@@ -143,7 +143,7 @@ void Game::update() {
             ScoreDisplay->text.setString("1UP\n" + std::to_string(Score));
             LifesDisplay->text.setString("LIFE'S: " + std::to_string(Lifes));
 
-            if (StationaryObjsM.empty()) {
+            if (StationaryObjs.empty()) {
                 gameplayHasEnded();
             }
         }
@@ -235,12 +235,12 @@ void Game::createMap() {
                 case '.':
                     row.push_back(new Path(TileSize, x, y));
                     PathIds.push_back({x, y});
-                    StationaryObjsM[{x, y}] = new Point(4, sf::Vector2<float>(TileSize * x + TileSize/ 2.0, TileSize * y + TileSize / 2.0));
+                    StationaryObjs[{x, y}] = new Point(4, sf::Vector2<float>(TileSize * x + TileSize / 2.0, TileSize * y + TileSize / 2.0));
                     break;
                 case '*':
                     row.push_back(new Path(TileSize, x, y));
                     PathIds.push_back({x, y});
-                    StationaryObjsM[{x, y}] = new Upgrade(12, sf::Vector2<float>(TileSize * x + TileSize/ 2.0, TileSize * y + TileSize / 2.0));
+                    StationaryObjs[{x, y}] = new Upgrade(12, sf::Vector2<float>(TileSize * x + TileSize / 2.0, TileSize * y + TileSize / 2.0));
                     break;
                 case 'P':
                     row.push_back(new Portal(TileSize, x, y));
@@ -277,7 +277,7 @@ void Game::drawStationaryObjs() {
     //    Window->draw(obj->getSprite());
     //}
 
-    for (auto& obj : StationaryObjsM) {
+    for (auto& obj : StationaryObjs) {
         Window->draw(obj.second->getSprite());
     }
 }
@@ -313,21 +313,21 @@ void Game::pullEvent() {
     }
 }
 
-void Game::checkStationaryObjsCollision_v2() {
+void Game::checkStationaryObjsCollision() {
     auto TileIDs = PacMan->getPosTileIDs();
-    if (StationaryObjsM.contains({ TileIDs.second_x, TileIDs.second_y })) {
+    if (StationaryObjs.contains({TileIDs.second_x, TileIDs.second_y })) {
         std::vector<std::pair<int, int>> ids =  { { TileIDs.second_x, TileIDs.second_y } };
 
-        if (StationaryObjsM.contains({ TileIDs.first_x, TileIDs.first_y })) {
+        if (StationaryObjs.contains({TileIDs.first_x, TileIDs.first_y })) {
             ids.push_back({ TileIDs.first_x, TileIDs.first_y });
         }
 
         for (auto id : ids) {
-            if (checkCollision(PacMan->Sprite.getPosition(),TileSize, StationaryObjsM[id]->getPosition(), StationaryObjsM[id]->getSize())) {
-                std::pair<int, bool> scoreAndIsUpgrade = StationaryObjsM[id]->interact();
+            if (checkCollision(PacMan->Sprite.getPosition(), TileSize, StationaryObjs[id]->getPosition(), StationaryObjs[id]->getSize())) {
+                std::pair<int, bool> scoreAndIsUpgrade = StationaryObjs[id]->interact();
 
-                delete StationaryObjsM[id];
-                StationaryObjsM.erase(id);
+                delete StationaryObjs[id];
+                StationaryObjs.erase(id);
 
                 Score += scoreAndIsUpgrade.first;
                 if (scoreAndIsUpgrade.second) {
@@ -354,10 +354,10 @@ void Game::deleteMap() {
 }
 
 void Game::deleteStationaryObjs() {
-    for (auto& obj : StationaryObjsM) {
+    for (auto& obj : StationaryObjs) {
         delete obj.second;
     }
-    StationaryObjsM.clear();
+    StationaryObjs.clear();
 }
 
 void Game::drawPauseMenu() {
@@ -454,14 +454,14 @@ void Game::upgradeOff() {
 }
 //todo dorobić znikanie owoców po X czasie
 void Game::checkFruitAppearance() {
-    if (FruitNotYetAppeared and StartNumOfPoints - 100 >= StationaryObjsM.size()) {
+    if (FruitNotYetAppeared and StartNumOfPoints - 100 >= StationaryObjs.size()) {
         FruitNotYetAppeared = false;
         //position is under ghost base = 12 13
-        if (StationaryObjsM.contains({ 12, 13 })) { // if a point is there
-            delete StationaryObjsM[{ 12, 13 }];
-            StationaryObjsM[{ 12, 13 }] = new Fruit(20, sf::Vector2<float>(TileSize * 12 + TileSize/ 2.0, TileSize * 13 + TileSize / 2.0), 250);
+        if (StationaryObjs.contains({12, 13 })) { // if a point is there
+            delete StationaryObjs[{12, 13 }];
+            StationaryObjs[{12, 13 }] = new Fruit(20, sf::Vector2<float>(TileSize * 12 + TileSize / 2.0, TileSize * 13 + TileSize / 2.0), 250);
         } else {
-            StationaryObjsM[{ 12, 13 }] = new Fruit(20, sf::Vector2<float>(TileSize * 12 + TileSize/ 2.0, TileSize * 13 + TileSize / 2.0), 200);
+            StationaryObjs[{12, 13 }] = new Fruit(20, sf::Vector2<float>(TileSize * 12 + TileSize / 2.0, TileSize * 13 + TileSize / 2.0), 200);
         }
 
     }

@@ -45,7 +45,7 @@ class Game {
     int TileSize;
     std::vector<std::string> MapText;
     std::vector<std::vector<Tile*>> Map;
-    std::map<std::pair<int, int>,StationaryObj*> StationaryObjsM;
+    std::map<std::pair<int, int>,StationaryObj*> StationaryObjs;
     std::vector<std::pair<int,int>> PortalID;
     std::vector<std::pair<int, int>> PathIds;
 
@@ -99,7 +99,6 @@ public:
     bool checkCollision (const sf::Vector2<float>& pos1, const int& size1,
                          const sf::Vector2<float>& pos2, const int& size2);
     void checkStationaryObjsCollision();
-    void checkStationaryObjsCollision_v2();
     void checkUpgradeTime();
     void upgradeOff();
     void checkFruitAppearance();
