@@ -49,7 +49,7 @@ class Game {
     std::vector<std::pair<int,int>> PortalID;
     std::vector<std::pair<int, int>> PathIds;
 
-    char Lifes;
+    char Lives;
     PacMan* PacMan;
     bool UpgradeOn;
     int UpgradeTimer;
@@ -64,7 +64,7 @@ class Game {
 
     NumberDisplay* ScoreDisplay;
     int Score;
-    NumberDisplay* LifesDisplay;
+    NumberDisplay* LivesDisplay;
 
 
     MainMenu* TheMainMenu;

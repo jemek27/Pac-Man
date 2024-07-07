@@ -5,9 +5,9 @@
 #include "Game.h"
 
 Game::Game(int windowH, int windowW, int fps, const std::string& name)
-            : VideoMode(windowH, windowW), Fps(fps), ScoreDisplay(nullptr), LifesDisplay(nullptr), PacMan(nullptr),
+            : VideoMode(windowH, windowW), Fps(fps), ScoreDisplay(nullptr), LivesDisplay(nullptr), PacMan(nullptr),
               Score(0), UpgradeOn(false), StartNumOfPoints(0), FruitNotYetAppeared(true), UpgradeTimer(0),
-              EatenCount(0), Lifes(3), UpgradeBlinkCouter(0) {
+              EatenCount(0), Lives(3), UpgradeBlinkCouter(0) {
 
     Window = new sf::RenderWindow(VideoMode, name);
     Window->setFramerateLimit(fps);
@@ -90,12 +90,12 @@ void Game::initiateGamePlay() {
 
     ThePauseMenu->InGameplay = true;
     ScoreDisplay = new NumberDisplay(Font, TileSize / 4 * 3, {TileSize * 3, TileSize / 5 * 2});
-    LifesDisplay = new NumberDisplay(Font, TileSize / 4 * 3, {TileSize * 3, TileSize * 23});
+    LivesDisplay = new NumberDisplay(Font, TileSize / 4 * 3, {TileSize * 3, TileSize * 23});
     UpgradeOn = false;
     UpgradeTimer = 0;
     EatenCount = 0;
     Score = 0;
-    Lifes = 3;
+    Lives = 3;
 
     createMap();
     auto visited = Ghosts[0]->checkVisited(MapText);
@@ -141,7 +141,7 @@ void Game::update() {
             ghostInteractions();
 
             ScoreDisplay->text.setString("1UP\n" + std::to_string(Score));
-            LifesDisplay->text.setString("LIFE'S: " + std::to_string(Lifes));
+            LivesDisplay->text.setString("LIVE'S: " + std::to_string(Lives));
 
             if (StationaryObjs.empty()) {
                 gameplayHasEnded();
@@ -164,7 +164,7 @@ void Game::render() {
         drawGhosts();
 
         Window->draw(ScoreDisplay->text);
-        Window->draw(LifesDisplay->text);
+        Window->draw(LivesDisplay->text);
         drawPortals();
 
         if (ThePauseMenu->GamePaused) { drawPauseMenu(); }
@@ -482,7 +482,7 @@ void Game::ghostInteractions() {
             } else {
                 render();
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                if (--Lifes == 0) { gameplayHasEnded(); }
+                if (--Lives == 0) { gameplayHasEnded(); }
                 else {
                     setStartPos();
                     upgradeOff();
