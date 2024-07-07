@@ -8,7 +8,7 @@
 
 class Fruit : public StationaryObj {
 public:
-    Fruit(const int& size, const sf::Vector2<float>& position);
+    Fruit(const int& size, const sf::Vector2<float>& position, int points);
     std::pair<int, bool> interact() override;
 };
 

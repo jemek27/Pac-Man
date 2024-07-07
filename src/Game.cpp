@@ -273,6 +273,10 @@ void Game::drawMap() {
 }
 
 void Game::drawStationaryObjs() {
+    //for (auto& obj : StationaryObjs) {
+    //    Window->draw(obj->getSprite());
+    //}
+
     for (auto& obj : StationaryObjsM) {
         Window->draw(obj.second->getSprite());
     }
@@ -319,7 +323,7 @@ void Game::checkStationaryObjsCollision_v2() {
         }
 
         for (auto id : ids) {
-            if (checkCollision(PacMan->Sprite.getPosition(),TileSize, StationaryObjsM[id], StationaryObjsM[id]->getSize())) {
+            if (checkCollision(PacMan->Sprite.getPosition(),TileSize, StationaryObjsM[id]->getPosition(), StationaryObjsM[id]->getSize())) {
                 std::pair<int, bool> scoreAndIsUpgrade = StationaryObjsM[id]->interact();
 
                 delete StationaryObjsM[id];
@@ -453,7 +457,13 @@ void Game::checkFruitAppearance() {
     if (FruitNotYetAppeared and StartNumOfPoints - 100 >= StationaryObjsM.size()) {
         FruitNotYetAppeared = false;
         //position is under ghost base = 12 13
-        StationaryObjs.push_back(new Fruit(20, sf::Vector2<float>(TileSize * 12 + TileSize/ 2.0, TileSize * 13 + TileSize / 2.0)));
+        if (StationaryObjsM.contains({ 12, 13 })) { // if a point is there
+            delete StationaryObjsM[{ 12, 13 }];
+            StationaryObjsM[{ 12, 13 }] = new Fruit(20, sf::Vector2<float>(TileSize * 12 + TileSize/ 2.0, TileSize * 13 + TileSize / 2.0), 250);
+        } else {
+            StationaryObjsM[{ 12, 13 }] = new Fruit(20, sf::Vector2<float>(TileSize * 12 + TileSize/ 2.0, TileSize * 13 + TileSize / 2.0), 200);
+        }
+
     }
 }
 

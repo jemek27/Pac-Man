@@ -4,7 +4,7 @@
 
 #include "StationaryObj/Fruit.h"
 
-Fruit::Fruit(const int& size, const sf::Vector2<float>& position) : StationaryObj(size, position, 200){
+Fruit::Fruit(const int& size, const sf::Vector2<float>& position, int points) : StationaryObj(size, position, points){
     Sprite = sf::Sprite();
 
     sf::CircleShape circle(Size / 2.0);
