@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <map>
 #include <string>
 #include <chrono>
 #include <functional>
@@ -44,7 +45,7 @@ class Game {
     int TileSize;
     std::vector<std::string> MapText;
     std::vector<std::vector<Tile*>> Map;
-    std::list<StationaryObj*> StationaryObjs;
+    std::map<std::pair<int, int>,StationaryObj*> StationaryObjsM;
     std::vector<std::pair<int,int>> PortalID;
     std::vector<std::pair<int, int>> PathIds;
 
@@ -83,11 +84,11 @@ public:
     void drawPauseMenu();
 
     void createMap();
-    void drawMap();
     bool running();
     void pullEvent();
     void update();
     void render();
+    void drawMap();
     void drawStationaryObjs();
     void drawPortals();
     void drawGhosts();
@@ -98,6 +99,7 @@ public:
     bool checkCollision (const sf::Vector2<float>& pos1, const int& size1,
                          const sf::Vector2<float>& pos2, const int& size2);
     void checkStationaryObjsCollision();
+    void checkStationaryObjsCollision_v2();
     void checkUpgradeTime();
     void upgradeOff();
     void checkFruitAppearance();

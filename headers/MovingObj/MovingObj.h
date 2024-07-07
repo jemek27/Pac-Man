@@ -38,6 +38,7 @@ public:
 
     void move(float multiplier = 1);
     void setStartPos();
+    TileIDs getPosTileIDs();
 };
 
 

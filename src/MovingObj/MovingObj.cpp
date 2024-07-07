@@ -96,5 +96,9 @@ void MovingObj::setStartPos() {
 //    std::cout << TileSize * StartTileId.first + TileSize / 2.0 << " " << TileSize * StartTileId.second + TileSize / 2.0 << std::endl;
 }
 
+TileIDs MovingObj::getPosTileIDs() {
+    return PosTileIDs;
+}
+
 
 
