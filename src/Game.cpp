@@ -376,20 +376,25 @@ void Game::drawGhosts() {
             --UpgradeBlinkCouter;
         }
         for (const auto& ghost : Ghosts) {
-            sf::Sprite temp = ghost->Sprite;
             if (ghost->Eaten) {
-                temp.setTexture(GhostTextureEaten.getTexture());
-                Window->draw(temp);
+                ImagePosition.left = 40;
+                UpgradeGhost.setTextureRect(ImagePosition);
+                UpgradeGhost.setPosition(ghost->Sprite.getPosition());
+                Window->draw(UpgradeGhost);
             } else if (!ghost->EatenAtCurrUpgrade and !ghost->Eaten) {
                 if (statBlinking) {
                     if (UpgradeBlinkCouter < Fps / 10) {
-                        temp.setTexture(GhostTextureUpgrade.getTexture());
-                        Window->draw(temp);
+                        ImagePosition.left = 0;
+                        UpgradeGhost.setTextureRect(ImagePosition);
+                        UpgradeGhost.setPosition(ghost->Sprite.getPosition());
+                        Window->draw(UpgradeGhost);
                         if (UpgradeBlinkCouter == 0) { UpgradeBlinkCouter = Fps / 5; }
                     }
                 } else {
-                    temp.setTexture(GhostTextureUpgrade.getTexture());
-                    Window->draw(temp);
+                    ImagePosition.left = 0;
+                    UpgradeGhost.setTextureRect(ImagePosition);
+                    UpgradeGhost.setPosition(ghost->Sprite.getPosition());
+                    Window->draw(UpgradeGhost);
                 }
             } else {
                 Window->draw(ghost->Sprite);
@@ -398,9 +403,10 @@ void Game::drawGhosts() {
     } else {
         for (const auto& ghost : Ghosts) {
             if (ghost->Eaten) {
-                sf::Sprite temp = ghost->Sprite;
-                temp.setTexture(GhostTextureEaten.getTexture());
-                Window->draw(temp);
+                ImagePosition.left = 40;
+                UpgradeGhost.setTextureRect(ImagePosition);
+                UpgradeGhost.setPosition(ghost->Sprite.getPosition());
+                Window->draw(UpgradeGhost);
             } else {
                 Window->draw(ghost->Sprite);
             }
@@ -431,17 +437,26 @@ void Game::setStartPos() {
 }
 
 void Game::loadTexture() {
-    sf::CircleShape circle(TileSize / 2.0);
+    if (!GhostEatenUpgradeTexturePng.loadFromFile("assets/upgradeEatenGhostAnimated_80x80.png")) {
+//        sf::CircleShape circle(TileSize / 2.0);
+//
+//        GhostTextureEaten.create(TileSize, TileSize);
+//        GhostTextureEaten.clear(sf::Color::Transparent);
+//        circle.setFillColor(sf::Color(255, 255, 255, 200));
+//        GhostTextureEaten.draw(circle);
+//
+//        GhostTextureUpgrade.create(TileSize, TileSize);
+//        GhostTextureUpgrade.clear(sf::Color::Transparent);
+//        circle.setFillColor(sf::Color::Blue);
+//        GhostTextureUpgrade.draw(circle);
+        std::cerr << "assets/upgradeEatenGhostAnimated_80x80.png not loaded" << std::endl;
+    } else {
+        ImagePosition = sf::IntRect(0,0,40,40);
+        UpgradeGhost = sf::Sprite(GhostEatenUpgradeTexturePng, ImagePosition);
+        UpgradeGhost.setTextureRect(ImagePosition);
+        UpgradeGhost.setOrigin(TileSize / 2.0, TileSize / 2.0);
+    }
 
-    GhostTextureEaten.create(TileSize, TileSize);
-    GhostTextureEaten.clear(sf::Color::Transparent);
-    circle.setFillColor(sf::Color(255, 255, 255, 200));
-    GhostTextureEaten.draw(circle);
-
-    GhostTextureUpgrade.create(TileSize, TileSize);
-    GhostTextureUpgrade.clear(sf::Color::Transparent);
-    circle.setFillColor(sf::Color::Blue);
-    GhostTextureUpgrade.draw(circle);
 }
 
 void Game::upgradeOff() {

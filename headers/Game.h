@@ -57,15 +57,17 @@ class Game {
     int StartNumOfPoints;
     bool FruitNotYetAppeared;
 
-    sf::RenderTexture GhostTextureEaten;
-    sf::RenderTexture GhostTextureUpgrade;
+    sf::Texture GhostEatenUpgradeTexturePng;
+    sf::IntRect ImagePosition;
+    sf::Sprite UpgradeGhost;
+//    sf::RenderTexture GhostTextureEaten;
+//    sf::RenderTexture GhostTextureUpgrade;
     std::vector<Ghost*> Ghosts;
     char EatenCount;
 
     NumberDisplay* ScoreDisplay;
     int Score;
     NumberDisplay* LivesDisplay;
-
 
     MainMenu* TheMainMenu;
     PauseMenu* ThePauseMenu;
