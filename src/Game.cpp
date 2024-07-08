@@ -3,11 +3,12 @@
 //
 
 #include "Game.h"
-
+//todo if eaten and upgrade stops speed should not drop
 Game::Game(int windowH, int windowW, int fps, const std::string& name)
-            : VideoMode(windowH, windowW), Fps(fps), ScoreDisplay(nullptr), LivesDisplay(nullptr), PacMan(nullptr),
-              Score(0), UpgradeOn(false), StartNumOfPoints(0), FruitNotYetAppeared(true), UpgradeTimer(0),
-              EatenCount(0), Lives(3), UpgradeBlinkCouter(0) {
+            : VideoMode(windowH, windowW), Fps(fps), FrameCounter(0), TextureShiftFrameThreshold(Fps / 6),
+            BlinkCouterThreshold(Fps / 10), ScoreDisplay(nullptr), AnimationCount(0),
+            LivesDisplay(nullptr), PacMan(nullptr), Score(0), UpgradeOn(false), StartNumOfPoints(0),
+            FruitNotYetAppeared(true), UpgradeTimer(0), EatenCount(0), Lives(3), UpgradeBlinkCouter(0) {
 
     Window = new sf::RenderWindow(VideoMode, name);
     Window->setFramerateLimit(fps);
@@ -112,6 +113,8 @@ void Game::initiateGamePlay() {
 void Game::update() {
     pullEvent();
     checkUpgradeTime();
+    checkTextureShift();
+
     if (!ThePauseMenu->GamePaused) {
         ThePauseMenu->checkPause();
 
@@ -383,7 +386,7 @@ void Game::drawGhosts() {
                 Window->draw(UpgradeGhost);
             } else if (!ghost->EatenAtCurrUpgrade and !ghost->Eaten) {
                 if (statBlinking) {
-                    if (UpgradeBlinkCouter < Fps / 10) {
+                    if (UpgradeBlinkCouter < BlinkCouterThreshold) {
                         ImagePosition.left = 0;
                         UpgradeGhost.setTextureRect(ImagePosition);
                         UpgradeGhost.setPosition(ghost->Sprite.getPosition());
@@ -505,4 +508,24 @@ void Game::ghostInteractions() {
             }
         }
     }
+}
+
+void Game::checkTextureShift() {
+    if (++FrameCounter > TextureShiftFrameThreshold) {
+        FrameCounter = 0;
+
+        if (AnimationCount++ == 0) { //only to animation frames
+            textureShift(40);
+        } else {
+            textureShift(0);
+            AnimationCount = 0;
+        }
+    }
+}
+
+void Game::textureShift(const int topPos) {
+    for (auto g : Ghosts) { g->setImagePositionAnimation(topPos); }
+
+    ImagePosition.top = topPos;
+    UpgradeGhost.setTextureRect(ImagePosition);
 }

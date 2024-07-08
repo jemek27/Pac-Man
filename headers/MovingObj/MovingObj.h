@@ -20,6 +20,8 @@ class MovingObj {
 protected:
     sf::RenderTexture Texture;
     sf::Texture texturePng;
+    sf::IntRect ImagePosition;
+
     TileIDs PosTileIDs;
     std::pair<int, int> StartTileId;
     int TileSize;
@@ -39,6 +41,7 @@ public:
     void move(float multiplier = 1);
     void setStartPos();
     TileIDs getPosTileIDs();
+    void setImagePositionAnimation(const int topPos);
 };
 
 

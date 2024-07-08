@@ -40,7 +40,11 @@ class Game {
     sf::Event Event;
     sf::VideoMode VideoMode;
     sf::Font Font;
-    int Fps;
+    char Fps;
+    char FrameCounter;
+    char AnimationCount;
+    const char TextureShiftFrameThreshold;
+    const char BlinkCouterThreshold;
 
     int TileSize;
     std::vector<std::string> MapText;
@@ -103,6 +107,8 @@ public:
     void checkStationaryObjsCollision();
     void checkUpgradeTime();
     void upgradeOff();
+    void checkTextureShift();
+    void textureShift(const int topPos);
     void checkFruitAppearance();
     void ghostInteractions();
 };

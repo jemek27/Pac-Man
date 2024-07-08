@@ -8,7 +8,6 @@
 
 
 class PacMan : public MovingObj {
-    sf::IntRect ImagePosition;
     bool ImageLoaded;
     char RequestedDirection;
     char StartDir;

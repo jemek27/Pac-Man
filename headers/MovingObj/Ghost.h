@@ -32,7 +32,6 @@ class Ghost : public MovingObj {
 
     int TileSize;
 
-    sf::IntRect ImagePosition;
     bool ImageLoaded;
 
     friend class Game;

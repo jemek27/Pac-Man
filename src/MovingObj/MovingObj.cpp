@@ -100,5 +100,10 @@ TileIDs MovingObj::getPosTileIDs() {
     return PosTileIDs;
 }
 
+void MovingObj::setImagePositionAnimation(const int topPos) {
+    ImagePosition.top = topPos;
+    Sprite.setTextureRect(ImagePosition);
+}
+
 
 
