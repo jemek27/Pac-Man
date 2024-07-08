@@ -105,5 +105,22 @@ void MovingObj::setImagePositionAnimation(const int topPos) {
     Sprite.setTextureRect(ImagePosition);
 }
 
+void MovingObj::rotateImageToDir() {
+    switch (CurrentDirection){
+        case 'N':
+            ImagePosition.left = 0;
+            break;
+        case 'S':
+            ImagePosition.left = 40;
+            break;
+        case 'E':
+            ImagePosition.left = 80;
+            break;
+        case 'W':
+            ImagePosition.left = 120;
+            break;
+    }
+}
+
 
 

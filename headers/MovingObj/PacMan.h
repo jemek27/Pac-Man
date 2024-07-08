@@ -20,7 +20,6 @@ public:
 
     void checkDirection();
     void setResetParams();
-    void rotateImageToDir();
 };
 
 

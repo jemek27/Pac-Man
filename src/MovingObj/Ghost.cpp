@@ -249,20 +249,3 @@ void Ghost::requestSpeedChange(const float &speed) {
     RequestedSpeed = speed;
     MoveCounterMultiplier = Speed / RequestedSpeed;
 }
-//todo do mov obj
-void Ghost::rotateImageToDir() {
-    switch (CurrentDirection){
-        case 'N':
-            ImagePosition.left = 0;
-            break;
-        case 'S':
-            ImagePosition.left = 40;
-            break;
-        case 'E':
-            ImagePosition.left = 80;
-            break;
-        case 'W':
-            ImagePosition.left = 120;
-            break;
-    }
-}

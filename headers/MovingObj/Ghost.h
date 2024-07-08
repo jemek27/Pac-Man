@@ -53,7 +53,6 @@ public:
     void setResetParams();
     void requestSpeedChange(const float& speed);
     std::vector<std::vector<bool>> checkVisited(const std::vector<std::string>& map);
-    void rotateImageToDir();
 };
 
 
