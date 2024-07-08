@@ -32,6 +32,9 @@ class Ghost : public MovingObj {
 
     int TileSize;
 
+    sf::IntRect ImagePosition;
+    bool ImageLoaded;
+
     friend class Game;
     class QItem {
     public:
@@ -51,6 +54,7 @@ public:
     void setResetParams();
     void requestSpeedChange(const float& speed);
     std::vector<std::vector<bool>> checkVisited(const std::vector<std::string>& map);
+    void rotateImageToDir();
 };
 
 

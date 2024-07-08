@@ -79,10 +79,10 @@ void Game::initiateGamePlay() {
 
     if (Ghosts.empty()){
 
-        Ghosts.push_back(new Ghost({12, 10}, TileSize, "redDot40x40.png", 'N', &PathIds, &MapText));
-        Ghosts.push_back(new Ghost({12, 9}, TileSize, "greenDot40x40.png", 'N', &PathIds, &MapText));
-        Ghosts.push_back(new Ghost({12, 11}, TileSize, "cyanDot40x40.png", 'N', &PathIds, &MapText));
-        Ghosts.push_back(new Ghost({14, 10}, TileSize, "magentaDot40x40.png", 'N', &PathIds, &MapText));
+        Ghosts.push_back(new Ghost({12, 10}, TileSize, "assets/redGhostAnimated_80x160.png", 'N', &PathIds, &MapText));
+        Ghosts.push_back(new Ghost({12, 9}, TileSize, "assets/greenGhostAnimated_80x160.png", 'N', &PathIds, &MapText));
+        Ghosts.push_back(new Ghost({12, 11}, TileSize, "assets/cyanGhostAnimated_80x160.png", 'N', &PathIds, &MapText));
+        Ghosts.push_back(new Ghost({14, 10}, TileSize, "assets/magentaGhostAnimated_80x160.png", 'N', &PathIds, &MapText));
 
     } else {
         for (auto& ghost : Ghosts) { ghost->setResetParams(); }

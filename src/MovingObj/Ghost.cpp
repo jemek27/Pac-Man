@@ -42,7 +42,13 @@ Ghost::Ghost(std::pair<int, int> startTileId, int tileSize, const std::string &f
 
         Sprite.setTexture(Texture.getTexture());
 
-    } else { Sprite.setTexture(texturePng); }
+    } else {
+        ImageLoaded = true;
+        ImagePosition = sf::IntRect(0,0,40,40);
+        Sprite = sf::Sprite(texturePng, ImagePosition);
+        rotateImageToDir();
+        Sprite.setTextureRect(ImagePosition);
+    }
 
     Sprite.setOrigin(tileSize / 2.0, tileSize / 2.0);
     // + tileSize / 2.0 because of the origin
@@ -61,6 +67,12 @@ void Ghost::wasEaten() {
 //        std::cout << __LINE__ << " " << PosTileIDs.first_y << " " << PosTileIDs.first_x << std::endl;
         findRoute();
         CurrentDirection = RouteDir.front();
+
+        if (ImageLoaded) {
+            rotateImageToDir();
+            Sprite.setTextureRect(ImagePosition);
+        }
+
         RouteDir.pop_front();
         //    std::cout << __LINE__ << " |"<< PosTileIDs.first_x * 40 << ' ' << PosTileIDs.first_y * 40  << std::endl;
 //    std::cout << __LINE__ << " |"<< Sprite.getPosition().x << ' ' << Sprite.getPosition().y   << std::endl;
@@ -96,12 +108,24 @@ void Ghost::checkAndMove() {
 
         findRoute();
         CurrentDirection = RouteDir.front();
+
+        if (ImageLoaded) {
+            rotateImageToDir();
+            Sprite.setTextureRect(ImagePosition);
+        }
+
         RouteDir.pop_front();
         DirMoveCounter = NumForCounter;
     }
 
     if (DirMoveCounter == 0) {
         CurrentDirection = RouteDir.front();
+
+        if (ImageLoaded) {
+            rotateImageToDir();
+            Sprite.setTextureRect(ImagePosition);
+        }
+
         RouteDir.pop_front();
         DirMoveCounter = NumForCounter;
     }
@@ -224,4 +248,21 @@ std::vector<std::vector<bool>> Ghost::checkVisited(const std::vector<std::string
 void Ghost::requestSpeedChange(const float &speed) {
     RequestedSpeed = speed;
     MoveCounterMultiplier = Speed / RequestedSpeed;
+}
+//todo do mov obj
+void Ghost::rotateImageToDir() {
+    switch (CurrentDirection){
+        case 'N':
+            ImagePosition.left = 0;
+            break;
+        case 'S':
+            ImagePosition.left = 40;
+            break;
+        case 'E':
+            ImagePosition.left = 80;
+            break;
+        case 'W':
+            ImagePosition.left = 120;
+            break;
+    }
 }
