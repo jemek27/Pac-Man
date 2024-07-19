@@ -3,7 +3,7 @@
 //
 
 #include "Game.h"
-//todo if eaten and upgrade stops speed should not drop
+//todo walltextures
 Game::Game(int windowH, int windowW, int fps, const std::string& name)
             : VideoMode(windowH, windowW), Fps(fps), FrameCounter(0), TextureShiftFrameThreshold(Fps / 6),
             BlinkCouterThreshold(Fps / 10), ScoreDisplay(nullptr), AnimationCount(0),
@@ -67,9 +67,12 @@ Game::~Game() {
     delete Window;
 }
 
+//todo raz wczytać tekstury do programu (cha trzeba od razu Sprite zrobić)
 void Game::initiateGamePlay() {
     if (!Map.empty()) { deleteMap(); }
     if (!StationaryObjs.empty()) { deleteStationaryObjs(); }
+    createMap();
+
     if (PacMan != nullptr) {
         PacMan->setPosTileIDs({12, 19}, {-1, -1});
         PacMan->setResetParams();
@@ -90,15 +93,20 @@ void Game::initiateGamePlay() {
     }
 
     ThePauseMenu->InGameplay = true;
-    ScoreDisplay = new NumberDisplay(Font, TileSize / 4 * 3, {TileSize * 3, TileSize / 5 * 2});
-    LivesDisplay = new NumberDisplay(Font, TileSize / 4 * 3, {TileSize * 3, TileSize * 23});
+
+    if (ScoreDisplay == nullptr) {
+        ScoreDisplay = new NumberDisplay(Font, TileSize / 4 * 3, {TileSize * 3, TileSize / 5 * 2});
+    }
+    if (LivesDisplay == nullptr) {
+        LivesDisplay = new NumberDisplay(Font, TileSize / 4 * 3, {TileSize * 3, TileSize * 23});
+    }
+
     UpgradeOn = false;
     UpgradeTimer = 0;
     EatenCount = 0;
     Score = 0;
     Lives = 3;
 
-    createMap();
     auto visited = Ghosts[0]->checkVisited(MapText);
     for (auto& g : Ghosts) {
         g->Visited = visited;
@@ -112,8 +120,6 @@ void Game::initiateGamePlay() {
 
 void Game::update() {
     pullEvent();
-    checkUpgradeTime();
-    checkTextureShift();
 
     if (!ThePauseMenu->GamePaused) {
         ThePauseMenu->checkPause();
@@ -123,6 +129,8 @@ void Game::update() {
         }
 
         if (!ThePauseMenu->GamePaused) {
+            checkUpgradeTime();
+            checkTextureShift();
             PacMan->tryMove(Map, TileSize);
 
             //std::thread thStationaryObjsCollision(&Game::checkStationaryObjsCollision, this);
@@ -466,7 +474,9 @@ void Game::upgradeOff() {
     UpgradeOn = false;
     EatenCount = 0;
     for (auto& g : Ghosts) {
-        g->requestSpeedChange(1.0f);
+        if (!g->Eaten) {
+            g->requestSpeedChange(1.0f);
+        }
         g->EatenAtCurrUpgrade = false;
     }
 }

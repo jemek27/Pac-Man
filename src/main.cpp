@@ -1,7 +1,8 @@
 
 #include "Game.h"
+#include <SFML/Graphics.hpp>
+#include <iostream>
 
-//todo exit po rozpoczeciu rozgrywki
 //todo koncept TileSize % mov == 0
 //todo zamiana nicku
 int main()

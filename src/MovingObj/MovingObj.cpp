@@ -4,6 +4,7 @@
 
 #include "MovingObj/MovingObj.h"
 // "{-1, -1} == null"
+//todo filename można wywalić
 MovingObj::MovingObj(std::pair<int, int> startTileId, int tileSize, const std::string& fileName, char starDir) :
                     TileSize(tileSize),StartTileId(startTileId) , PosTileIDs(startTileId, {-1, -1}),
                     CurrentDirection(starDir), Step(2) {}
