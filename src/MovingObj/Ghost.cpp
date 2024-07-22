@@ -6,7 +6,7 @@
 
 Ghost::Ghost(std::pair<int, int> startTileId, int tileSize, const std::string &fileName,
              char starDir, std::vector<std::pair<int, int>>* possibleTargets, std::vector<std::string>* textMap)
-             : MovingObj(startTileId, tileSize, fileName, starDir), GhostID(fileName[0]), TargetId(startTileId), ResetId({12, 10}),
+             : MovingObj(startTileId, tileSize, fileName, starDir), GhostID(fileName[7]), TargetId(startTileId), ResetId({12, 10}),
              Eaten(false), EatenAtCurrUpgrade(false), Speed(1.0f), PossibleTargets(possibleTargets), TextMap(textMap),
              DirMoveCounter(0), SavedNumForCounter(tileSize/Step), TileSize(tileSize), NumForCounter(SavedNumForCounter),
              RequestedSpeed(1.0f), MoveCounterMultiplier(1.0f){
@@ -19,7 +19,7 @@ Ghost::Ghost(std::pair<int, int> startTileId, int tileSize, const std::string &f
 
         sf::CircleShape circle(tileSize / 2.0);
 
-        switch (fileName[0]) {
+        switch (fileName[7]) {
             case 'r' :
                 circle.setFillColor(sf::Color::Red);
                 break;
@@ -82,6 +82,11 @@ void Ghost::wasEaten() {
 }
 
 void Ghost::checkAndMove() {
+//    std::cout   << GhostID << "\n"
+//                << PosTileIDs.first_x << " " << PosTileIDs.first_y << " " << (*TextMap)[PosTileIDs.first_y][PosTileIDs.first_x] << "\n"
+//                << TargetId.first << " " << TargetId.second << " " << (*TextMap)[TargetId.second][TargetId.first] << "\n"
+//                << int(DirMoveCounter) << " " << RouteDir.size() << "\n" << std::endl;
+
     checkTileIds(TileSize);
 
     if (RequestedSpeed != Speed and PosTileIDs.second_x == -1) {
@@ -211,9 +216,8 @@ void Ghost::selectRandomTarget() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distr(0, PossibleTargets->size() - 1); // Define the range
-    int randomIndex = distr(gen);
-
     do {
+        int randomIndex = distr(gen);
         TargetId = PossibleTargets->at(randomIndex);
     } while (PosTileIDs.first_x == TargetId.first and PosTileIDs.first_y == TargetId.second);
 

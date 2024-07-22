@@ -11,7 +11,7 @@ MovingObj::MovingObj(std::pair<int, int> startTileId, int tileSize, const std::s
 // -1 because we numerate from 0
 
 
-void MovingObj::checkTileIds(const int &tileSize) {
+void MovingObj::checkTileIds(const int &tileSize) { //todo nie potrzebujemy tileSize przekawywać
     sf::Vector2 pos = Sprite.getPosition();
     // texture origin is set to the middle
     std::pair<int, int> posInt = {pos.y - tileSize / 2, pos.x - tileSize / 2 };

@@ -3,11 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-//todo koncept TileSize % mov == 0
 //todo zamiana nicku
 int main()
 {
-
     int windowWidth = 1000;
     int windowHeight = 1000;
     int fps = 60;
