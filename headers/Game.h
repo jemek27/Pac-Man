@@ -75,6 +75,9 @@ class Game {
 
     MainMenu* TheMainMenu;
     PauseMenu* ThePauseMenu;
+
+    std::map<std::string, sf::Texture> MapTextures;
+    std::map<std::string, sf::Sprite> MapSprites;
 public:
     Game(int WindowH, int WindowW, int fps, const std::string& name);
     ~Game();
@@ -83,6 +86,7 @@ public:
 
     void initiateGamePlay();
     bool getInGameplay() const;
+    void loadMapTextures();
     void loadTexture();
 
     void actInMainMenu();
@@ -90,6 +94,9 @@ public:
     void drawPauseMenu();
 
     void createMap();
+    char checkNeighbourWalls(const int& x, const int& y);
+    sf::Sprite wallMatching(const int& x, const int& y);
+    sf::Sprite gateMatching(const int& x, const int& y);
     bool running();
     void pullEvent();
     void update();

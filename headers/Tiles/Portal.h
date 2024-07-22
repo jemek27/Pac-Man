@@ -11,10 +11,10 @@
 class Portal : public Tile {
     sf::Vector2<float> Destination;
 public:
-    Portal(int tileSize, int x, int y)
-            : Tile(tileSize, x, y, sf::Color::Black) {}
+    Portal(int tileSize, int x, int y, sf::Sprite& block)
+            : Tile(tileSize, x, y, block) {}
 
-    Portal(sf::Vector2<float> pos, int tileSize, int x, int y) : Destination(pos), Tile(tileSize, x, y, sf::Color::Black) {}
+    Portal(sf::Vector2<float> pos, int tileSize, int x, int y, sf::Sprite& block) : Destination(pos), Tile(tileSize, x, y, block) {}
     virtual ~Portal() = default;
 
     bool interact() override;

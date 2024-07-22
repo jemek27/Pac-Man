@@ -10,8 +10,8 @@
 
 class Path : public Tile{
 public:
-    Path(int tileSize, int x, int y)
-            : Tile(tileSize, x, y, sf::Color::Black) {}
+    Path(int tileSize, int x, int y, sf::Sprite& block)
+            : Tile(tileSize, x, y, block) {}
     virtual ~Path() = default;
     bool interact() override;
     sf::Vector2<float> interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos) override;

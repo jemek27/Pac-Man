@@ -11,8 +11,8 @@
 
 class Background : public Tile {
 public:
-    Background(int tileSize, int x, int y)
-            : Tile(tileSize, x, y, sf::Color::Black) {}
+    Background(int tileSize, int x, int y, sf::Sprite& block)
+            : Tile(tileSize, x, y, block) {}
 
     virtual ~Background() = default;
     bool interact() override;

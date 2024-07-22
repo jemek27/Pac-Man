@@ -10,8 +10,8 @@
 
 class Wall : public Tile {
 public:
-    Wall(int tileSize, int x, int y)
-            : Tile(tileSize, x, y, sf::Color::Blue) {}
+    Wall(int tileSize, int x, int y, sf::Sprite& block)
+            : Tile(tileSize, x, y, block) {}
     virtual ~Wall() = default;
     bool interact() override;
     sf::Vector2<float> interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos) override;

@@ -10,8 +10,8 @@
 
 class Gate : public Tile {
 public:
-    Gate(int tileSize, int x, int y)
-            : Tile(tileSize, x, y, sf::Color::Yellow) {}
+    Gate(int tileSize, int x, int y, sf::Sprite& block)
+            : Tile(tileSize, x, y, block) {}
 
     virtual ~Gate() = default;
     bool interact() override;
