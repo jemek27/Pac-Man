@@ -115,7 +115,6 @@ public:
     void checkUpgradeTime();
     void upgradeOff();
     void checkTextureShift();
-    void textureShift(const int topPos);
     void checkFruitAppearance();
     void ghostInteractions();
 };

@@ -3,8 +3,8 @@
 //
 
 #include "Game.h"
-//todo walltextures
 //todo pacman animation
+//todo osobna klasa mapy?
 Game::Game(int windowH, int windowW, int fps, const std::string& name)
             : VideoMode(windowH, windowW), Fps(fps), FrameCounter(0), TextureShiftFrameThreshold(Fps / 6),
             BlinkCouterThreshold(Fps / 10), ScoreDisplay(nullptr), AnimationCount(0),
@@ -104,6 +104,17 @@ void Game::loadMapTextures() {
     MapSprites["fourWay"] = sf::Sprite (MapTextures["fourWay"]);
     MapSprites["wallEnd"] = sf::Sprite (MapTextures["wallEnd"]);
     MapSprites["wallLone"] = sf::Sprite (MapTextures["wallLone"]);
+}
+
+void Game::loadTexture() {
+    if (!GhostEatenUpgradeTexturePng.loadFromFile("assets/upgradeEatenGhostAnimated_80x80.png")) {
+        std::cerr << "assets/upgradeEatenGhostAnimated_80x80.png not loaded" << std::endl;
+    } else {
+        ImagePosition = sf::IntRect(0,0,40,40);
+        UpgradeGhost = sf::Sprite(GhostEatenUpgradeTexturePng, ImagePosition);
+        UpgradeGhost.setTextureRect(ImagePosition);
+        UpgradeGhost.setOrigin(TileSize / 2.0, TileSize / 2.0);
+    }
 }
 
 //todo raz wczytać tekstury do programu (cha trzeba od razu Sprite zrobić)
@@ -489,29 +500,6 @@ void Game::setStartPos() {
     }
 }
 
-void Game::loadTexture() {
-    if (!GhostEatenUpgradeTexturePng.loadFromFile("assets/upgradeEatenGhostAnimated_80x80.png")) {
-//        sf::CircleShape circle(TileSize / 2.0);
-//
-//        GhostTextureEaten.create(TileSize, TileSize);
-//        GhostTextureEaten.clear(sf::Color::Transparent);
-//        circle.setFillColor(sf::Color(255, 255, 255, 200));
-//        GhostTextureEaten.draw(circle);
-//
-//        GhostTextureUpgrade.create(TileSize, TileSize);
-//        GhostTextureUpgrade.clear(sf::Color::Transparent);
-//        circle.setFillColor(sf::Color::Blue);
-//        GhostTextureUpgrade.draw(circle);
-        std::cerr << "assets/upgradeEatenGhostAnimated_80x80.png not loaded" << std::endl;
-    } else {
-        ImagePosition = sf::IntRect(0,0,40,40);
-        UpgradeGhost = sf::Sprite(GhostEatenUpgradeTexturePng, ImagePosition);
-        UpgradeGhost.setTextureRect(ImagePosition);
-        UpgradeGhost.setOrigin(TileSize / 2.0, TileSize / 2.0);
-    }
-
-}
-
 void Game::upgradeOff() {
     UpgradeOn = false;
     EatenCount = 0;
@@ -565,21 +553,16 @@ void Game::ghostInteractions() {
 void Game::checkTextureShift() {
     if (++FrameCounter > TextureShiftFrameThreshold) {
         FrameCounter = 0;
+        for (auto g : Ghosts) { g->shiftFrame(); }
 
         if (AnimationCount++ == 0) { //only to animation frames
-            textureShift(40);
+            ImagePosition.top = 40;
         } else {
-            textureShift(0);
+            ImagePosition.top = 0;
             AnimationCount = 0;
         }
+        UpgradeGhost.setTextureRect(ImagePosition);
     }
-}
-
-void Game::textureShift(const int topPos) {
-    for (auto g : Ghosts) { g->setImagePositionAnimation(topPos); }
-
-    ImagePosition.top = topPos;
-    UpgradeGhost.setTextureRect(ImagePosition);
 }
 
 sf::Sprite Game::wallMatching(const int& x, const int& y) {

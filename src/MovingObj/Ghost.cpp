@@ -11,12 +11,8 @@ Ghost::Ghost(std::pair<int, int> startTileId, int tileSize, const std::string &f
              DirMoveCounter(0), SavedNumForCounter(tileSize/Step), TileSize(tileSize), NumForCounter(SavedNumForCounter),
              RequestedSpeed(1.0f), MoveCounterMultiplier(1.0f){
 
-    Sprite = sf::Sprite();
-
-    if (!texturePng.loadFromFile(fileName)) {
-        std::cerr << fileName + " couldn't be read\n";
+    if (!ImageLoaded) {
         // Creating a replacement Texture
-
         sf::CircleShape circle(tileSize / 2.0);
 
         switch (fileName[7]) {
@@ -34,32 +30,20 @@ Ghost::Ghost(std::pair<int, int> startTileId, int tileSize, const std::string &f
                 break;
         }
 
-
         Texture.create(tileSize, tileSize);
         Texture.clear(sf::Color::Transparent);
         Texture.draw(circle);
         Texture.display();
 
         Sprite.setTexture(Texture.getTexture());
-
-    } else {
-        ImageLoaded = true;
-        ImagePosition = sf::IntRect(0,0,40,40);
-        Sprite = sf::Sprite(texturePng, ImagePosition);
-        rotateImageToDir();
-        Sprite.setTextureRect(ImagePosition);
     }
-
-    Sprite.setOrigin(tileSize / 2.0, tileSize / 2.0);
-    // + tileSize / 2.0 because of the origin
-    Sprite.setPosition(tileSize * startTileId.first + tileSize / 2.0, tileSize * startTileId.second + tileSize / 2.0);
 }
 
 void Ghost::wasEaten() {
     Eaten = true;
 
 
-    checkTileIds(TileSize);
+    checkTileIds();
 
     if (PosTileIDs.second_x != -1) { //between tiles
         char stepsToSingleTile = NumForCounter - DirMoveCounter;
@@ -87,7 +71,7 @@ void Ghost::checkAndMove() {
 //                << TargetId.first << " " << TargetId.second << " " << (*TextMap)[TargetId.second][TargetId.first] << "\n"
 //                << int(DirMoveCounter) << " " << RouteDir.size() << "\n" << std::endl;
 
-    checkTileIds(TileSize);
+    checkTileIds();
 
     if (RequestedSpeed != Speed and PosTileIDs.second_x == -1) {
         Speed = RequestedSpeed;
@@ -142,7 +126,7 @@ void Ghost::checkAndMove() {
 void Ghost::findRoute() {
     QItem source(0, 0, std::deque<char>());
     std::vector<std::string> map = *TextMap;
-    checkTileIds(TileSize);
+    checkTileIds();
 //    std::string ghostLog;
 //    ghostLog.push_back(GhostID);
 //    ghostLog += "\n";
@@ -211,7 +195,7 @@ void Ghost::findRoute() {
 
 
 void Ghost::selectRandomTarget() {
-    checkTileIds(TileSize);
+    checkTileIds();
 
     std::random_device rd;
     std::mt19937 gen(rd());

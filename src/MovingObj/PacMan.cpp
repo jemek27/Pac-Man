@@ -44,7 +44,7 @@ void PacMan::tryMove(const std::vector<std::vector<Tile*>> &map, const int &tile
     auto saveCurDir = CurrentDirection;
     bool changeDir = false;
     checkDirection();
-    checkTileIds(tileSize);
+    checkTileIds();
 
     if (CurrentDirection != RequestedDirection) { changeDir = true; }
 

@@ -32,7 +32,7 @@ class Ghost : public MovingObj {
 
     int TileSize;
 
-    bool ImageLoaded;
+
 
     friend class Game;
     class QItem {

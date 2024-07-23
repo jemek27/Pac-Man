@@ -21,6 +21,8 @@ protected:
     sf::RenderTexture Texture;
     sf::Texture texturePng;
     sf::IntRect ImagePosition;
+    unsigned int LastFrame;
+    bool ImageLoaded;
 
     TileIDs PosTileIDs;
     std::pair<int, int> StartTileId;
@@ -33,7 +35,7 @@ public:
     MovingObj(std::pair<int, int> startTileId, int tileSize, const std::string& fileName, char starDir);
 
     void setPosTileIDs(std::pair<int, int> firstID, std::pair<int, int> secondID);
-    void checkTileIds(const int &tileSize);
+    void checkTileIds();
 
     void interact(const std::vector<std::vector<Tile*>> &map, const int &tileSize, sf::Vector2<float> savedPos);
     void interactBetweenTiles(const std::vector<std::vector<Tile *>> &map, const int &tileSize, sf::Vector2<float> savedPos);
@@ -43,6 +45,7 @@ public:
     TileIDs getPosTileIDs();
     void setImagePositionAnimation(const int topPos);
     void rotateImageToDir();
+    void shiftFrame();
 };
 
 
