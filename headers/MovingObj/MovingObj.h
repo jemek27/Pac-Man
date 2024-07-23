@@ -22,6 +22,7 @@ protected:
     sf::Texture texturePng;
     sf::IntRect ImagePosition;
     unsigned int LastFrame;
+    bool AnimationForward;
     bool ImageLoaded;
 
     TileIDs PosTileIDs;

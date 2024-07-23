@@ -3,13 +3,15 @@
 //
 
 #include "Game.h"
-//todo pacman animation
 //todo osobna klasa mapy?
+//todo animacja przy skuciu się
+//todo pod koniec portalu powinno nastąpić przejście
 Game::Game(int windowH, int windowW, int fps, const std::string& name)
-            : VideoMode(windowH, windowW), Fps(fps), FrameCounter(0), TextureShiftFrameThreshold(Fps / 6),
-            BlinkCouterThreshold(Fps / 10), ScoreDisplay(nullptr), AnimationCount(0),
-            LivesDisplay(nullptr), PacMan(nullptr), Score(0), UpgradeOn(false), StartNumOfPoints(0),
-            FruitNotYetAppeared(true), UpgradeTimer(0), EatenCount(0), Lives(3), UpgradeBlinkCouter(0) {
+            : VideoMode(windowH, windowW), Fps(fps), FrameCounter(0), PacmanTextureShiftFrameThreshold(Fps / 15),
+              BlinkCouterThreshold(Fps / 10), ScoreDisplay(nullptr), AnimationCount(0),
+              LivesDisplay(nullptr), PacMan(nullptr), Score(0), UpgradeOn(false), StartNumOfPoints(0),
+              FruitNotYetAppeared(true), UpgradeTimer(0), EatenCount(0), Lives(3), UpgradeBlinkCouter(0),
+              PacmanTextureShiftCounter(0), GhostTextureShiftThreshold(3) {
 
     Window = new sf::RenderWindow(VideoMode, name);
     Window->setFramerateLimit(fps);
@@ -128,7 +130,7 @@ void Game::initiateGamePlay() {
         PacMan->setResetParams();
     }
     else {
-        PacMan = new class PacMan({12, 19}, TileSize, "assets/pacman40x160.png", 'N');
+        PacMan = new class PacMan({12, 19}, TileSize, "assets/pacmanAnimated160x240.png", 'N');
     }
 
     if (Ghosts.empty()){
@@ -180,7 +182,7 @@ void Game::update() {
 
         if (!ThePauseMenu->GamePaused) {
             checkUpgradeTime();
-            checkTextureShift();
+            checkAndShiftTexture();
             PacMan->tryMove(Map, TileSize);
 
             //std::thread thStationaryObjsCollision(&Game::checkStationaryObjsCollision, this);
@@ -550,10 +552,18 @@ void Game::ghostInteractions() {
     }
 }
 
-void Game::checkTextureShift() {
-    if (++FrameCounter > TextureShiftFrameThreshold) {
+void Game::checkAndShiftTexture() {
+    if (++FrameCounter > PacmanTextureShiftFrameThreshold) {
         FrameCounter = 0;
+        ++PacmanTextureShiftCounter;
+        PacMan->shiftFrame();
+    }
+
+    if (PacmanTextureShiftCounter == GhostTextureShiftThreshold) {
+        PacmanTextureShiftCounter = 0;
+        
         for (auto g : Ghosts) { g->shiftFrame(); }
+        PacMan->shiftFrame();
 
         if (AnimationCount++ == 0) { //only to animation frames
             ImagePosition.top = 40;
@@ -563,6 +573,8 @@ void Game::checkTextureShift() {
         }
         UpgradeGhost.setTextureRect(ImagePosition);
     }
+
+
 }
 
 sf::Sprite Game::wallMatching(const int& x, const int& y) {

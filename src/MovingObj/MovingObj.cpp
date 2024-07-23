@@ -7,7 +7,7 @@
 //todo filename można wywalić
 MovingObj::MovingObj(std::pair<int, int> startTileId, int tileSize, const std::string& fileName, char starDir) :
                     TileSize(tileSize),StartTileId(startTileId) , PosTileIDs(startTileId, {-1, -1}),
-                    CurrentDirection(starDir), Step(2), Sprite(sf::Sprite()), ImageLoaded(false) {
+                    CurrentDirection(starDir), Step(2), Sprite(sf::Sprite()), ImageLoaded(false), AnimationForward(true) {
 
     if (!texturePng.loadFromFile(fileName)) {
         std::cerr << fileName + " couldn't be read\n";
@@ -126,10 +126,21 @@ void MovingObj::rotateImageToDir() {
 }
 
 void MovingObj::shiftFrame() {
-    if (ImagePosition.top == LastFrame) {
-        ImagePosition.top = 0;
+    if (AnimationForward) {
+        if (ImagePosition.top == LastFrame) {
+            AnimationForward = false;
+            ImagePosition.top -= TileSize;
+        } else {
+            ImagePosition.top += TileSize;
+        }
     } else {
-        ImagePosition.top += TileSize;
+        if (ImagePosition.top == 0) {
+            AnimationForward = true;
+            ImagePosition.top += TileSize;
+        } else {
+            ImagePosition.top -= TileSize;
+        }
     }
+
     Sprite.setTextureRect(ImagePosition);
 }

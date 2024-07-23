@@ -43,7 +43,9 @@ class Game {
     char Fps;
     char FrameCounter;
     char AnimationCount;
-    const char TextureShiftFrameThreshold;
+    char PacmanTextureShiftCounter;
+    const char PacmanTextureShiftFrameThreshold;
+    const char GhostTextureShiftThreshold;
     const char BlinkCouterThreshold;
 
     int TileSize;
@@ -114,7 +116,7 @@ public:
     void checkStationaryObjsCollision();
     void checkUpgradeTime();
     void upgradeOff();
-    void checkTextureShift();
+    void checkAndShiftTexture();
     void checkFruitAppearance();
     void ghostInteractions();
 };
