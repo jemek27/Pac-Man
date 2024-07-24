@@ -44,6 +44,8 @@ add_executable(Projekt src/main.cpp
         headers/Menu/PauseMenu.h
         src/MovingObj/Ghost.cpp
         headers/MovingObj/Ghost.h
+        src/GameMap.cpp
+        headers/GameMap.h
 )
 
 include_directories(headers /usr/include c:/SFML/include)

@@ -16,22 +16,13 @@
 #include <regex>
 #include <future>
 
+#include "GameMap.h"
 #include "MovingObj/MovingObj.h"
 #include "MovingObj/PacMan.h"
 #include "MovingObj/Ghost.h"
 #include "NumberDisplay.h"
 #include "Menu/MainMenu.h"
 #include "Menu/PauseMenu.h"
-#include "Tiles/Tile.h"
-#include "Tiles/Background.h"
-#include "Tiles/Path.h"
-#include "Tiles/Wall.h"
-#include "Tiles/Gate.h"
-#include "Tiles/Portal.h"
-#include "StationaryObj/StationaryObj.h"
-#include "StationaryObj/Point.h"
-#include "StationaryObj/Upgrade.h"
-#include "StationaryObj/Fruit.h"
 
 
 
@@ -48,12 +39,8 @@ class Game {
     const char GhostTextureShiftThreshold;
     const char BlinkCouterThreshold;
 
-    int TileSize;
-    std::vector<std::string> MapText;
-    std::vector<std::vector<Tile*>> Map;
-    std::map<std::pair<int, int>,StationaryObj*> StationaryObjs;
-    std::vector<std::pair<int,int>> PortalID;
-    std::vector<std::pair<int, int>> PathIds;
+    const int TileSize;
+    GameMap LabiryntMap;
 
     char Lives;
     PacMan* PacMan;
@@ -77,35 +64,23 @@ class Game {
 
     MainMenu* TheMainMenu;
     PauseMenu* ThePauseMenu;
-
-    std::map<std::string, sf::Texture> MapTextures;
-    std::map<std::string, sf::Sprite> MapSprites;
 public:
     Game(int WindowH, int WindowW, int fps, const std::string& name);
     ~Game();
-    void deleteMap();
-    void deleteStationaryObjs();
 
     void initiateGamePlay();
     bool getInGameplay() const;
-    void loadMapTextures();
     void loadTexture();
 
     void actInMainMenu();
     void drawMainMenu();
     void drawPauseMenu();
 
-    void createMap();
-    char checkNeighbourWalls(const int& x, const int& y);
-    sf::Sprite wallMatching(const int& x, const int& y);
-    sf::Sprite gateMatching(const int& x, const int& y);
     bool running();
     void pullEvent();
     void update();
     void render();
-    void drawMap();
-    void drawStationaryObjs();
-    void drawPortals();
+
     void drawGhosts();
 
     void gameplayHasEnded();
