@@ -17,11 +17,11 @@ bool Portal::interact() {
 }
 
 
-sf::Vector2<float> Portal::interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos) {
-    if (    (pos.x + 2 == CenterPosition.x and pos.y == CenterPosition.y) or
-            (pos.x - 2 == CenterPosition.x and pos.y == CenterPosition.y) or
-            (pos.x == CenterPosition.x and pos.y + 2 == CenterPosition.y) or
-            (pos.x == CenterPosition.x and pos.y - 2 == CenterPosition.y)   ) {
+sf::Vector2<float> Portal::interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos, float step) {
+    if ((pos.x + step == CenterPosition.x and pos.y == CenterPosition.y) or
+        (pos.x - step == CenterPosition.x and pos.y == CenterPosition.y) or
+        (pos.x == CenterPosition.x and pos.y + step == CenterPosition.y) or
+        (pos.x == CenterPosition.x and pos.y - step == CenterPosition.y)   ) {
         return Destination;
     } else {
         return pos;

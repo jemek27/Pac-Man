@@ -10,8 +10,7 @@ bool Gate::interact() {
 }
 
 
-//todo klucz do bramy zaimplementować
-sf::Vector2<float> Gate::interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos) {
+sf::Vector2<float> Gate::interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos, float step) {
     return savedPos;
 }
 

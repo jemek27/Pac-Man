@@ -14,7 +14,7 @@ public:
             : Tile(tileSize, x, y, block) {}
     virtual ~Path() = default;
     bool interact() override;
-    sf::Vector2<float> interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos) override;
+    sf::Vector2<float> interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos, float step) override;
 };
 
 

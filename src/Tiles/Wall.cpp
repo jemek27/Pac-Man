@@ -9,6 +9,6 @@ bool Wall::interact() {
     return false;
 }
 
-sf::Vector2<float> Wall::interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos) {
+sf::Vector2<float> Wall::interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos, float step) {
     return savedPos;
 }

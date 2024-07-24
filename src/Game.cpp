@@ -4,6 +4,8 @@
 
 #include "Game.h"
 //todo animacja przy skuciu się
+//todo fruit icon
+//todo ponowne esc p przerwanie pauzy
 Game::Game(int windowH, int windowW, int fps, const std::string& name)
             : TileSize(40), LabiryntMap(GameMap(TileSize, 200)), VideoMode(windowH, windowW), Fps(fps), FrameCounter(0),
               PacmanTextureShiftFrameThreshold(Fps / 15), BlinkCouterThreshold(Fps / 10), ScoreDisplay(nullptr),

@@ -7,7 +7,7 @@
 //todo filename można wywalić
 MovingObj::MovingObj(std::pair<int, int> startTileId, int tileSize, const std::string& fileName, char starDir) :
                     TileSize(tileSize),StartTileId(startTileId) , PosTileIDs(startTileId, {-1, -1}),
-                    CurrentDirection(starDir), Step(2), Sprite(sf::Sprite()), ImageLoaded(false), AnimationForward(true) {
+                    CurrentDirection(starDir), Step(2.5), Sprite(sf::Sprite()), ImageLoaded(false), AnimationForward(true) {
 
     if (!texturePng.loadFromFile(fileName)) {
         std::cerr << fileName + " couldn't be read\n";
@@ -77,14 +77,14 @@ void MovingObj::move(float multiplier) {
 void MovingObj::interact(const std::vector<std::vector<Tile *>> &map, const int &tileSize, sf::Vector2<float> savedPos) {
     move();
     checkTileIds();
-    Sprite.setPosition(map[PosTileIDs.second_y][PosTileIDs.second_x]->interact(Sprite.getPosition(), savedPos));
+    Sprite.setPosition(map[PosTileIDs.second_y][PosTileIDs.second_x]->interact(Sprite.getPosition(), savedPos, Step));
 }
 
 void MovingObj::interactBetweenTiles(const std::vector<std::vector<Tile *>> &map, const int &tileSize, sf::Vector2<float> savedPos) {
     move();
     checkTileIds();
     if (PosTileIDs.second_y != -1) {
-        Sprite.setPosition(map[PosTileIDs.second_y][PosTileIDs.second_x]->interact(Sprite.getPosition(), savedPos));
+        Sprite.setPosition(map[PosTileIDs.second_y][PosTileIDs.second_x]->interact(Sprite.getPosition(), savedPos, Step));
     }
 }
 
@@ -101,11 +101,6 @@ void MovingObj::setStartPos() {
 
 TileIDs MovingObj::getPosTileIDs() {
     return PosTileIDs;
-}
-
-void MovingObj::setImagePositionAnimation(const int topPos) {
-    ImagePosition.top = topPos;
-    Sprite.setTextureRect(ImagePosition);
 }
 
 void MovingObj::rotateImageToDir() {

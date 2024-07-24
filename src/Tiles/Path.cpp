@@ -9,7 +9,7 @@ bool Path::interact() {
     return true;
 }
 
-sf::Vector2<float> Path::interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos) {
+sf::Vector2<float> Path::interact(sf::Vector2<float> pos, sf::Vector2<float> savedPos, float step) {
     return pos;
 }
 

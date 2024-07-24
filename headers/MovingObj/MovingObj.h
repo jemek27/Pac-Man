@@ -44,7 +44,6 @@ public:
     void move(float multiplier = 1);
     void setStartPos();
     TileIDs getPosTileIDs();
-    void setImagePositionAnimation(const int topPos);
     void rotateImageToDir();
     void shiftFrame();
 };
