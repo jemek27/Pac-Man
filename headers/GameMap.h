@@ -26,7 +26,9 @@
 class GameMap {
     friend class Game;
 
-    int TileSize;
+    const int TileSize;
+    const int FruitValue;
+
     std::vector<std::string> MapText;
     std::vector<std::vector<Tile*>> Map;
     std::map<std::pair<int, int>,StationaryObj*> StationaryObjs;
@@ -36,7 +38,7 @@ class GameMap {
     std::map<std::string, sf::Texture> MapTextures;
     std::map<std::string, sf::Sprite> MapSprites;
 public:
-    GameMap(const int tileSize);
+    GameMap(const int tileSize, const int fruitValue);
     ~GameMap();
 
     void loadMapTextures();

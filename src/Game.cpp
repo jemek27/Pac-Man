@@ -7,12 +7,11 @@
 //todo animacja przy skuciu się
 //todo pod koniec portalu powinno nastąpić przejście
 Game::Game(int windowH, int windowW, int fps, const std::string& name)
-            : TileSize(40), LabiryntMap(GameMap(TileSize)),
-              VideoMode(windowH, windowW), Fps(fps), FrameCounter(0), PacmanTextureShiftFrameThreshold(Fps / 15),
-              BlinkCouterThreshold(Fps / 10), ScoreDisplay(nullptr), AnimationCount(0),
-              LivesDisplay(nullptr), PacMan(nullptr), Score(0), UpgradeOn(false), StartNumOfPoints(0),
-              FruitNotYetAppeared(true), UpgradeTimer(0), EatenCount(0), Lives(3), UpgradeBlinkCouter(0),
-              PacmanTextureShiftCounter(0), GhostTextureShiftThreshold(3) {
+            : TileSize(40), LabiryntMap(GameMap(TileSize, 200)), VideoMode(windowH, windowW), Fps(fps), FrameCounter(0),
+              PacmanTextureShiftFrameThreshold(Fps / 15), BlinkCouterThreshold(Fps / 10), ScoreDisplay(nullptr),
+              AnimationCount(0), LivesDisplay(nullptr), PacMan(nullptr), Score(0), UpgradeOn(false), StartNumOfPoints(0),
+              FruitAppeared(false), ConstFruitTimeCounter(Fps * 10), UpgradeTimer(0), EatenCount(0), Lives(3),
+              UpgradeBlinkCouter(0), PacmanTextureShiftCounter(0), GhostTextureShiftThreshold(3) {
 
     Window = new sf::RenderWindow(VideoMode, name);
     Window->setFramerateLimit(fps);
@@ -64,20 +63,23 @@ void Game::initiateGamePlay() {
     if (PacMan != nullptr) {
         PacMan->setPosTileIDs({12, 19}, {-1, -1});
         PacMan->setResetParams();
-    }
-    else {
+    } else {
         PacMan = new class PacMan({12, 19}, TileSize, "assets/pacmanAnimated160x240.png", 'N');
     }
 
-    if (Ghosts.empty()){
+    if (Ghosts.empty()) {
 
-        Ghosts.push_back(new Ghost({12, 10}, TileSize, "assets/redGhostAnimated_80x160.png", 'N', &LabiryntMap.PathIds, &LabiryntMap.MapText));
-        Ghosts.push_back(new Ghost({12, 9}, TileSize, "assets/greenGhostAnimated_80x160.png", 'N', &LabiryntMap.PathIds, &LabiryntMap.MapText));
-        Ghosts.push_back(new Ghost({12, 11}, TileSize, "assets/cyanGhostAnimated_80x160.png", 'N', &LabiryntMap.PathIds, &LabiryntMap.MapText));
-        Ghosts.push_back(new Ghost({14, 10}, TileSize, "assets/magentaGhostAnimated_80x160.png", 'N', &LabiryntMap.PathIds, &LabiryntMap.MapText));
+        Ghosts.push_back(new Ghost({12, 10}, TileSize, "assets/redGhostAnimated_80x160.png", 'N', &LabiryntMap.PathIds,
+                                   &LabiryntMap.MapText));
+        Ghosts.push_back(new Ghost({12, 9}, TileSize, "assets/greenGhostAnimated_80x160.png", 'N', &LabiryntMap.PathIds,
+                                   &LabiryntMap.MapText));
+        Ghosts.push_back(new Ghost({12, 11}, TileSize, "assets/cyanGhostAnimated_80x160.png", 'N', &LabiryntMap.PathIds,
+                                   &LabiryntMap.MapText));
+        Ghosts.push_back(new Ghost({14, 10}, TileSize, "assets/magentaGhostAnimated_80x160.png", 'N', &LabiryntMap.PathIds,
+                                   &LabiryntMap.MapText));
 
     } else {
-        for (auto& ghost : Ghosts) { ghost->setResetParams(); }
+        for (auto &ghost: Ghosts) { ghost->setResetParams(); }
     }
 
     ThePauseMenu->InGameplay = true;
@@ -96,13 +98,14 @@ void Game::initiateGamePlay() {
     Lives = 3;
 
     auto visited = Ghosts[0]->checkVisited(LabiryntMap.MapText);
-    for (auto& g : Ghosts) {
+    for (auto &g: Ghosts) {
         g->Visited = visited;
         g->selectRandomTarget();
         g->findRoute();
     }
 
-    FruitNotYetAppeared = true;
+    FruitAppeared = false;
+    FruitTimeCounter = ConstFruitTimeCounter;
     StartNumOfPoints = LabiryntMap.StationaryObjs.size();
 }
 
@@ -245,15 +248,16 @@ void Game::pullEvent() {
 
 void Game::checkStationaryObjsCollision() {
     auto TileIDs = PacMan->getPosTileIDs();
-    if (LabiryntMap.StationaryObjs.contains({TileIDs.second_x, TileIDs.second_y })) {
-        std::vector<std::pair<int, int>> ids =  { { TileIDs.second_x, TileIDs.second_y } };
+    if (LabiryntMap.StationaryObjs.contains({TileIDs.second_x, TileIDs.second_y})) {
+        std::vector<std::pair<int, int>> ids = {{TileIDs.second_x, TileIDs.second_y}};
 
-        if (LabiryntMap.StationaryObjs.contains({TileIDs.first_x, TileIDs.first_y })) {
-            ids.push_back({ TileIDs.first_x, TileIDs.first_y });
+        if (LabiryntMap.StationaryObjs.contains({TileIDs.first_x, TileIDs.first_y})) {
+            ids.push_back({TileIDs.first_x, TileIDs.first_y});
         }
 
-        for (auto id : ids) {
-            if (checkCollision(PacMan->Sprite.getPosition(), TileSize, LabiryntMap.StationaryObjs[id]->getPosition(), LabiryntMap.StationaryObjs[id]->getSize())) {
+        for (auto id: ids) {
+            if (checkCollision(PacMan->Sprite.getPosition(), TileSize, LabiryntMap.StationaryObjs[id]->getPosition(),
+                               LabiryntMap.StationaryObjs[id]->getSize())) {
                 std::pair<int, bool> scoreAndIsUpgrade = LabiryntMap.StationaryObjs[id]->interact();
 
                 delete LabiryntMap.StationaryObjs[id];
@@ -264,7 +268,7 @@ void Game::checkStationaryObjsCollision() {
                     UpgradeOn = true;
                     UpgradeTimer = Fps * 9;
                     UpgradeBlinkCouter = Fps / 5;
-                    for (auto& g : Ghosts) {
+                    for (auto &g: Ghosts) {
                         g->requestSpeedChange(0.5f);
                     }
                 }
@@ -359,18 +363,31 @@ void Game::upgradeOff() {
         g->EatenAtCurrUpgrade = false;
     }
 }
-//todo dorobić znikanie owoców po X czasie
+
 void Game::checkFruitAppearance() {
-    if (FruitNotYetAppeared and StartNumOfPoints - 100 >= LabiryntMap.StationaryObjs.size()) {
-        FruitNotYetAppeared = false;
-        //position is under ghost base = 12 13
-        if (LabiryntMap.StationaryObjs.contains({12, 13 })) { // if a point is there
-            delete LabiryntMap.StationaryObjs[{12, 13 }];
-            LabiryntMap.StationaryObjs[{12, 13 }] = new Fruit(20, sf::Vector2<float>(TileSize * 12 + TileSize / 2.0, TileSize * 13 + TileSize / 2.0), 250);
+    if (!FruitAppeared and StartNumOfPoints - 100 >= LabiryntMap.StationaryObjs.size()) {
+        FruitAppeared = true;
+
+        sf::Vector2<float> position(TileSize * 12 + TileSize / 2.0, TileSize * 13 + TileSize / 2.0);
+        if (LabiryntMap.StationaryObjs.contains({12, 13})) { // if a point is there
+            delete LabiryntMap.StationaryObjs[{12, 13}];
+            LabiryntMap.StationaryObjs[{12, 13}] = new Fruit(20, position, 250);
         } else {
-            LabiryntMap.StationaryObjs[{12, 13 }] = new Fruit(20, sf::Vector2<float>(TileSize * 12 + TileSize / 2.0, TileSize * 13 + TileSize / 2.0), 200);
+            LabiryntMap.StationaryObjs[{12, 13}] = new Fruit(20, position, 200);
         }
 
+    }
+
+    if (FruitAppeared and FruitTimeCounter != 0) {
+        if (--FruitTimeCounter == 0) {
+            if (LabiryntMap.StationaryObjs[{12, 13}]->interact().first == LabiryntMap.FruitValue) {
+                delete LabiryntMap.StationaryObjs[{12, 13}];
+            } else {
+                delete LabiryntMap.StationaryObjs[{12, 13}];
+                LabiryntMap.StationaryObjs[{12, 13}] = new Point(4, sf::Vector2<float>(TileSize * 12 + TileSize / 2.0,
+                                                                                        TileSize * 13 + TileSize / 2.0));
+            }
+        }
     }
 }
 
@@ -420,6 +437,4 @@ void Game::checkAndShiftTexture() {
         }
         UpgradeGhost.setTextureRect(ImagePosition);
     }
-
-
 }

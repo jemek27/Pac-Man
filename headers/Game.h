@@ -48,7 +48,10 @@ class Game {
     int UpgradeTimer;
     int UpgradeBlinkCouter;
     int StartNumOfPoints;
-    bool FruitNotYetAppeared;
+    bool FruitAppeared;
+    const int ConstFruitTimeCounter;
+    int FruitTimeCounter;
+
 
     sf::Texture GhostEatenUpgradeTexturePng;
     sf::IntRect ImagePosition;
