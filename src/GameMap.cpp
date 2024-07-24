@@ -82,8 +82,10 @@ void GameMap::createMap() {
 
     if (portalPos.size() == 2) {
         std::cout << portalPos[1].x << " " << portalPos[1].y << std::endl;
+        delete Map[PortalID[0].second][PortalID[0].first];
         Map[PortalID[0].second][PortalID[0].first] = new Portal(portalPos[1], TileSize, PortalID[0].first,
                                                                 PortalID[0].second, MapSprites["empty_space"]);
+        delete Map[PortalID[1].second][PortalID[1].first];
         Map[PortalID[1].second][PortalID[1].first] = new Portal(portalPos[0], TileSize, PortalID[1].first,
                                                                 PortalID[1].second, MapSprites["empty_space"]);
     }

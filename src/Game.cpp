@@ -3,9 +3,7 @@
 //
 
 #include "Game.h"
-//todo osobna klasa mapy?
 //todo animacja przy skuciu się
-//todo pod koniec portalu powinno nastąpić przejście
 Game::Game(int windowH, int windowW, int fps, const std::string& name)
             : TileSize(40), LabiryntMap(GameMap(TileSize, 200)), VideoMode(windowH, windowW), Fps(fps), FrameCounter(0),
               PacmanTextureShiftFrameThreshold(Fps / 15), BlinkCouterThreshold(Fps / 10), ScoreDisplay(nullptr),
