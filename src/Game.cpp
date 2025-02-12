@@ -41,8 +41,6 @@ Game::~Game() {
     delete Window;
 }
 
-
-
 void Game::loadTexture() {
     if (!GhostEatenUpgradeTexturePng.loadFromFile("assets/upgradeEatenGhostAnimated_80x80.png")) {
         std::cerr << "assets/upgradeEatenGhostAnimated_80x80.png not loaded" << std::endl;
@@ -143,7 +141,7 @@ void Game::update() {
             ghostInteractions();
 
             ScoreDisplay->text.setString("1UP\n" + std::to_string(Score));
-            LivesDisplay->text.setString("LIVE'S: " + std::to_string(Lives));
+            LivesDisplay->text.setString("LIVES: " + std::to_string(Lives));
 
             if (LabiryntMap.StationaryObjs.empty()) {
                 gameplayHasEnded();
